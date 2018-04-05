@@ -1,0 +1,122 @@
+# This is V. Lindahl's addition of the Amber99 BSC1 parameters to GROMACS. It is an extension of
+# A. Villa's GROMACS implementation of the Amber99 BSC0 DNA forcefield addition.
+
+============================================================================================
+Log for BSC0 implementation
+-------------------------------------------------------------------------------------------
+#2011-02-17 A.Villa implementation only for DNA
+1) add atomtype CI to atomtypes.atp (corresponding to C5')
+2) add bonded interaction involving CI to ffbonded.itp.
+ 4 CI bond and 11 CI angle parameters identical to CT,
+ 12 dihedral parameters identical to CT and 12 new dihedral parameters (convesion 1 kcal= 4.184 kJ)
+3) add non-bonded interaction  ffnonbonded.itp. CI=CT
+4) replace in "C5'    CT" with  "C5'    CI" in dna.rtp
+
+============================================================================================
+Log for BSC1 implementation
+-------------------------------------------------------------------------------------------
+
+# To view which files have changed (ignore whitespace with -w) between this forcefield and the original amber99 GROMACS implementation do:
+for i in `ls`; do here=$i; there="/data/viveca/gromacs/share/top/amber99.ff/$i"; if [ -f "${there}" ]; then delta=`diff -wq $here $there`; if [ ! -z "${delta}" ]; then echo $i;fi; fi;  done
+
+# The changed files are:
+
+atomtypes.atp
+dna.rtp
+ffbonded.itp
+ffnonbonded.itp
+forcefield.doc
+
+gbsa.itp            # I don't know why these are different but I uess they are not relevant for DNA?
+rna.rtp             # Ignore. Only changed comments here for some reason
+aminoacids.rtp      # Ignore. Only changed comments here for some reason
+tip5p.itp           # These are irrelevant for DNA and TIP3P and only adds TIP5p water updates for newer GROMACS
+watermodels.dat     # These are irrelevant for DNA and TIP3P and only adds TIP5p water updates for newer GROMACS
+
+
+# Description of the changes relevant from going to BSC0 to BSC1
+
+atomtypes.atp [done]
+--------------
+# Added atomtypes CE, C1, C2
+
+dna.rtp [done]
+-----------
+# Changed mappings of atom name -> atomtype_old to atom_name atomtype_new as:
+C3': CT -> CE for residues A, T, G, C
+C8 : CK -> C1 for residues A          # no CK (or C8) for residues T and C. No change for C8 of G
+C5 : CM -> C2 for residues T          # no CM for residues A, G. No change for residue C
+C6 : CM -> C2 for residues T          # no CM for residues A, G. No change for residue C
+
+ffbonded.itp [done]
+------------
+# For CE, C1, C2:
+
+1) Added bonds
+-----------------
+# In frcmod the bonds are listed as e.g.
+CI-H1  340.0    1.090
+# which is the bond between CI and H1 with force constant 340 in kcal/mol/Angstr^2 and
+# equilibrium distance 1.090 in Angstr.
+# The conversion to GROMACS force constant i kJ/mol/nm^2 is
+
+k_gmx = k_amber*4.184*100*2
+
+# where 1 kcal = 4.184 kJ (excactly) and 1/Angstr^2 = 100/nm^2 and the factor of 2 is
+# for a different force constant definition in Amber and Gromacs
+# (this can be verified e.g. by transforming a standard atomtype from Amber to Gromacs).
+
+# The distance is converted as d_gmx = 0.1*d_amber.
+
+2) Added angletypes
+Both Amber and Gromacs have parameters in degrees.
+Force constant has units of kJ/mol/rad^2 in Gromacs and in kcal/mol/rad^2 so
+
+k_gmx = k_amber*4.184*2
+
+3) Added dihedraltypes
+
+In the Amber frcmod files the dihedrals are listed e.g. as
+
+;IPT , JPT , KPT , LPT , IDIVF , PK , PHASE , PN
+C2-C2-C -O     1       2.175     180.0        -2.
+
+IPT, JPT, KPT LPT = the involved atomtypes
+IDIVF =
+"The factor by which the torsional barrier is divided. Consult Weiner, et al., JACS 106:765 (1984) p. 769 for details. Basically, the actual torsional potential is
+(PK/IDIVF) * (1 + cos(PN*phi - PHASE))"
+PHASE = the phase shift angle (deg) in the torsional function.
+PN    = The periodicity of the torsional barrier. (negative values are just marking that
+there are several terms to this torsional potential and these are read until the next
+non-negative value).
+
+Two old dihedral parameters needed to be removed since they conflicted with new bsc1 params.
+
+a) proper periodic dihedrals
+Same definition as improper periodic dihedrals but all atoms are consequtive.
+Gromacs function type = 9 since there are multiple dihedrals (of different multiplicity)
+for the same set of atomtypes.
+
+Conversion of force constant (no additional factor of 2 here...):
+k_gmx = k amber*4.184 = (PK/DIVF)*4.184
+(confirmed by comparing a standard entry in amber99 in gromacs and amber14)
+
+Used: awk '{ans=4.184*$2/$1; printf("%.10g\n",ans)}' cols_DIVF-PK.dat > out.dat
+
+b) improper periodic dihedrals
+Same as for proper dihedrals but DIVF=1 and the gromacs function type = 4
+
+Three additional errors needed to be fixed:
+1) the parmbsc0 implementation had the wrong order CT CT OS CI. The correct one is: CI CT OS CT (or CT OS CT CI).
+2) the line "CE  CT  OS  CT    9      0.0       1.60247      3" was missing in parmBSC1.frcmod and had to be added to ffbonded.itp manually.
+3) all dihedrals containing atomtype 'X' should be written out last so that this doesn't override any more specific terms.
+
+ffnonbonded.itp [done]
+------------
+Added atomtype CE with same nonbonded params as CT
+Added atomtype C1 with same nonbonded params as CK
+Added atomtype C2 with same nonbonded params as CM
+
+forcefield.doc [done]
+---------------
+Just docs.

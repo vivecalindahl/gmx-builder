@@ -1,0 +1,17 @@
+# These files were downloaded from the ParmBSC1 creator's website: http://mmb.pcb.ub.es/www/ParmBSC1 on: 2016-01-18 16:35:33.753384003 +0100
+parmBSC1.frcmod
+parmBSC1.lib
+
+# These are the BSC0 parameters found in Ambertools 14
+frcmod.parmbsc0_Ambertools14
+
+# This is the corresponding file from Alessandra Villa (email)
+# and from the creator's website (http://mmb.irbbarcelona.org/PARMBSC0).
+# These are identical.
+parmbsc0.frcmod_A.Villa
+frcmod.parmbsc0_Perez
+
+# Note that there is a type in the bsc0 and bsc1 CI and CE masses.
+# It should be 12.01 and not 12.001
+
+

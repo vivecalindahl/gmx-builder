@@ -1,0 +1,2 @@
+Run './sequence-to-pdb.sh' to turn './sequences.txt' into pdbs using x3dna (which will be untarred from './tools' if needed).
+Output will be created in directory './build'.
