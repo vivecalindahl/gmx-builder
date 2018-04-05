@@ -2,8 +2,9 @@
 This set of python and bash scripts demonstrating how one can automate a fairly complex, but typical, gmx simulation experiments.
 The chosen use case is investigating sequence dependency of base pair opening in a DNA double helix. The DNA molecule is modeled
 as being periodically connected (infinitely long) and two forcefields are used. The scientific aim is to determine the opening
-free energy as a function of the base pair type and the sequence. All in all, this requires building and managing many different
-simulation systems, which is error prone, tedious and not very reproducible if performed manually.
+free energy as a function of the base pair type and the sequence (see e.g. http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005463). 
+All in all, this requires building and managing many different simulation systems, which is error prone, tedious and not very 
+reproducible if performed manually.
 
 Here I have mainly used python scripting. As I have realized in the process, and which is perhaps obvious, gmx is better suited for working
 directly in the terminal. It can be quite awkward (at first?) to use gmx tools from within a python script. There are definitly
