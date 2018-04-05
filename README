@@ -1,23 +1,13 @@
 # BACKGROUND
-This set of python and bash scripts demonstrating how one can automate a fairly complex, but typical, gmx simulation experiments.
-The chosen use case is investigating sequence dependency of base pair opening in a DNA double helix. The DNA molecule is modeled
-as being periodically connected (infinitely long) and two forcefields are used. The scientific aim is to determine the opening
-free energy as a function of the base pair type and the sequence (see e.g. http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005463). 
-All in all, this requires building and managing many different simulation systems, which is error prone, tedious and not very 
-reproducible if performed manually.
+This set of python and bash scripts demonstrating how one can automate a fairly complex, but typical, GROMACS (gmx) simulation study. The chosen use case is investigating sequence dependency of base pair opening in a DNA double helix. The scientific aim in this case is to determine the opening free energy as a function of the base pair type and the DNA sequence. The DNA molecule is modeled as being periodically connected (infinitely long) and two forcefields are applied. The AWH method (available in gmx) is used to calculate the PMF along a reaction coordinate for the opening process, which is then averaged over multiple simulation. All in all, this requires building and managing many different simulation systems, which is error prone, tedious and not very reproducible if performed manually.
 
-Here I have mainly used python scripting. As I have realized in the process, and which is perhaps obvious, gmx is better suited for working
-directly in the terminal. It can be quite awkward (at first?) to use gmx tools from within a python script. There are definitly
-advantages though, especially when organizing input parameters and keeping the whole process contained and modular.
-Note that I am not a python wizard and this is all quite simplistic coding-wise, but I hope it still can be elucidating as prototype
-for the required workflow.
+I have previously performed such a study (see http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005463) essentially by patching together smaller python and bash scripts and one very large bash script :) Here I have mainly used python. As I have realized in the process, and quite obviously, gmx is better suited for working directly in the terminal. It can be quite awkward (at first?) to use gmx tools from within a python script. There are definitely advantages to wrapping it all in python though, especially when organizing input parameters and keeping the whole process contained and modular. Note that I am not a python wizard and this is all quite simplistic coding-wise, but hopefully it can still be elucidating as a prototype for the workflow.
 
 # WHAT THE SCRIPTS DO
-For now, the scripts only take care of the building process of the gmx systems and generating run directories that are essentially
-"ready to run" (doing the simulation automatically is another story :)).
+For now, the scripts only take care of the building process of the gmx systems and generating run directories that are essentially "ready to run" (automating simulation management is another story :)).
 
 # HOW TO TEST
-Easiest is to from some interactive python program, e.g. ipython do:
+Easiest is to from some interactive python program, e.g. in ipython do:
 
 > sys.path.append('/PATH/TO/gmx-builder/scripts/')
 > import build_dna_runs as bdna
@@ -25,8 +15,7 @@ Easiest is to from some interactive python program, e.g. ipython do:
 > os.chdir('build')
 > bdna.example_build()
 
-which will build an example DNA simulation setup into './build'.
+which should build an example DNA simulation setup into './build'.
 
 # IDEA OF USAGE
-For a new study, one would have to write a python script similar to './scripts/build_dna_runs.py'. Less system-specific functionalities
-that are reusable would be implemented into ./scripts/gmx_builder.py'
+For a new study, one would have to write a python script similar to './scripts/build_dna_runs.py'. Less system-specific functionalities that are reusable would be implemented into ./scripts/gmx_builder.py'
