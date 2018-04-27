@@ -228,7 +228,7 @@ def basepair_distance_selections(resid1, resid2, name1='base_N1orN3', name2='par
 
 def get_basepair_resids(gro):
     # Figure out the length of the DNA chain (could alternatively give the sequence/length as input).
-    # Maybe functionalities from e.g. MDAnalysis should be applied here instead...
+    # TODO: should probably replace this with functionalities from e.g. MDAnalysis to not reinvent the wheel.
     table = gmxb.read_gro_table(gro)
     col_resname = gmxb.gro_table_column('residue_name')
     col_atomname = gmxb.gro_table_column('atom_name')
