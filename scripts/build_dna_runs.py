@@ -285,7 +285,7 @@ def example_build(make_clean=False):
     # Another option is using the pmx python library. However, the current modeling capabilities of pmx for DNA is
     # limited and not optimal for generating the periodic DNA topologies since the phosphates at the end residues are
     # missing in the moddel.
-    pdb_dir = external_params_dir + '/pdbs'
+    pdb_dir = external_params_dir + '/pdbs/vary-num-T'
     pdbs = ['/'.join([pdb_dir,f]) for f in os.listdir(pdb_dir) if f.endswith('.pdb') ]
 
     # Build specifications (model parameters)
