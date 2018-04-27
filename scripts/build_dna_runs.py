@@ -226,7 +226,7 @@ def basepair_distance_selections(resid1, resid2, name1='base_N1orN3', name2='par
            
     return sel
 
-def get_basepair_resids(gro):
+def get_basepair_resids_and_sequence(gro):
     # Figure out the length of the DNA chain (could alternatively give the sequence/length as input).
     # TODO: should probably replace this with functionalities from e.g. MDAnalysis to not reinvent the wheel.
     table = gmxb.read_gro_table(gro)
@@ -254,16 +254,25 @@ def get_basepair_resids(gro):
     for n in range(1,nbp+1):
         resid_pairs.append((n, 2*nbp + 1 - n))
 
-    return resid_pairs
+    resid2resname = {row[col_resid]:row[col_resname] for row in dna_table}
+    pair_sequence = [(resid2resname[str(p[0])], resid2resname[str(p[1])]) for p in resid_pairs]
+
+    return resid_pairs, pair_sequence
 
 # Select the target base pairs to calculate opening free energy for.
 def get_target_basepair_resids(gro):
-    basepair_resids = get_basepair_resids(gro)
+    basepair_resids, basepair_sequence = get_basepair_resids_and_sequence(gro)
 
-    # Take 3 in the middle, e.g.
+    # E.g., take 3 in the middle
+    '''
     ntarget = 3
     nbp = len(basepair_resids)
     return basepair_resids[nbp/2:nbp/2 + ntarget]
+    '''
+
+    # Or all T
+    target_basepairs = [resids for resids, resnames in zip(basepair_resids, basepair_sequence) if 'DT' in set(resnames)]
+    return target_basepairs
 
 # An example of how how one could build a simulation experiment for the periodic DNA system.
 def example_build(make_clean=False):
