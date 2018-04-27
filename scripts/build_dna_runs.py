@@ -272,7 +272,10 @@ def example_build(make_clean=False):
     scripts_dir = os.path.dirname(os.path.realpath(__file__))
     external_params_dir =  scripts_dir + '/../external-parameters'
 
-    # The pdb files could be generated from a sequence from within here calling some modeling tool like x3dna.
+    # Note: the pdb files could be generated from a sequence from within here calling some modeling tool like x3dna.
+    # Another option is using the pmx python library. However, the current modeling capabilities of pmx for DNA is
+    # limited and not optimal for generating the periodic DNA topologies since the phosphates at the end residues are
+    # missing in the moddel.
     pdb_dir = external_params_dir + '/pdbs'
     pdbs = ['/'.join([pdb_dir,f]) for f in os.listdir(pdb_dir) if f.endswith('.pdb') ]
 
