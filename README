@@ -22,3 +22,6 @@ For a new study, one would have to write a python script similar to './scripts/b
 
 # OUTLOOK/TODOS
 This use case hopefully helps delineate what functionalities are useful to include in a gmx to python framework and which components should be up to the user to design. The currently most popular package for interfacing gmx and python is, it seems from my enquiries, GromacsWrapper (https://orbeckst.github.io/GromacsWrapper/). It would be elucidating to transform this use case to rely on GromacsWrapper and see how big the overlap with with my own "wrapper" gmx-builder is. Another option is BioPhysCode (https://biophyscode.github.io/)
+
+# ADDITIONAL NOTES
+These scripts have been tested using gmx 2018.1.
